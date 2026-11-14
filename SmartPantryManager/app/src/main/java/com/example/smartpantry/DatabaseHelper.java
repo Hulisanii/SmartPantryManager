@@ -10,10 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * DatabaseHelper class managing SQLite database creation, schema migrations, pre-loaded recipe seeding,
+ * full pantry ingredient CRUD operations, and robust strict-matching recipe algorithm logic.
+ */
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "smart_pantry.db";
     private static final int DB_VERSION = 1;
 
+    /**
+     * Constructs a new DatabaseHelper instance.
+     *
+     * @param context Application or Activity context.
+     */
     public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
@@ -43,6 +52,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    /**
+     * Seeds 18 distinct pre-loaded sample recipes into the recipes database table on first run.
+     *
+     * @param db Writable SQLiteDatabase instance.
+     */
     private void seedRecipes(SQLiteDatabase db) {
         String[][] data = {
             {"Tomato Egg Scramble", "egg|2|piece; tomato|1|piece; salt|1|pinch", "1. Chop the tomato.\n2. Beat the eggs with salt.\n3. Cook the tomato, add eggs, and stir until set."},
@@ -76,6 +90,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // --- Pantry CRUD Operations ---
 
+    /**
+     * Inserts a new ingredient record into the pantry table.
+     *
+     * @param name Ingredient name.
+     * @param quantity Quantity amount.
+     * @param unit Unit of measurement.
+     * @param expiry Expiry date string (YYYY-MM-DD).
+     * @return Row ID of newly inserted ingredient, or -1 if insertion failed.
+     */
     public long addIngredient(String name, double quantity, String unit, String expiry) {
         ContentValues v = new ContentValues();
         v.put("name", name.trim());
@@ -85,6 +108,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return getWritableDatabase().insert("pantry", null, v);
     }
 
+    /**
+     * Updates an existing ingredient record in the pantry table.
+     *
+     * @param id Primary key ID of the ingredient.
+     * @param name Updated name.
+     * @param quantity Updated quantity.
+     * @param unit Updated unit.
+     * @param expiry Updated expiry date string.
+     * @return Number of rows affected.
+     */
     public int updateIngredient(long id, String name, double quantity, String unit, String expiry) {
         ContentValues v = new ContentValues();
         v.put("name", name.trim());
@@ -94,10 +127,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return getWritableDatabase().update("pantry", v, "id=?", new String[]{String.valueOf(id)});
     }
 
+    /**
+     * Deletes an ingredient record from the pantry table by ID.
+     *
+     * @param id Primary key ID of the ingredient to delete.
+     * @return Number of rows affected.
+     */
     public int deleteIngredient(long id) {
         return getWritableDatabase().delete("pantry", "id=?", new String[]{String.valueOf(id)});
     }
 
+    /**
+     * Queries a single ingredient by ID.
+     *
+     * @param id Ingredient primary key ID.
+     * @return Ingredient object or null if not found.
+     */
     public Ingredient getIngredient(long id) {
         try (Cursor c = getReadableDatabase().query("pantry", null, "id=?", new String[]{String.valueOf(id)}, null, null, null)) {
             if (c.moveToFirst()) return ingredientFromCursor(c);
@@ -105,6 +150,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return null;
     }
 
+    /**
+     * Queries all ingredients stored in the pantry table ordered alphabetically by name.
+     *
+     * @return List of Ingredient objects.
+     */
     public List<Ingredient> getAllIngredients() {
         List<Ingredient> result = new ArrayList<>();
         try (Cursor c = getReadableDatabase().query("pantry", null, null, null, null, null, "name COLLATE NOCASE ASC")) {
@@ -127,6 +177,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // --- Recipe Operations ---
 
+    /**
+     * Queries all pre-loaded recipes from the recipes table.
+     *
+     * @return List of Recipe objects.
+     */
     public List<Recipe> getAllRecipes() {
         List<Recipe> result = new ArrayList<>();
         try (Cursor c = getReadableDatabase().query("recipes", null, null, null, null, null, "name COLLATE NOCASE ASC")) {
@@ -137,6 +192,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result;
     }
 
+    /**
+     * Queries a single recipe by ID.
+     *
+     * @param id Primary key recipe ID.
+     * @return Recipe object or null if not found.
+     */
     public Recipe getRecipe(long id) {
         try (Cursor c = getReadableDatabase().query("recipes", null, "id=?", new String[]{String.valueOf(id)}, null, null, null)) {
             if (c.moveToFirst()) return recipeFromCursor(c);
@@ -158,6 +219,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * Strict Matching Rule (Section 2.3):
      * A recipe qualifies ONLY if EVERY single required ingredient is present in the pantry in AT LEAST the required quantity.
+     *
+     * @return List of strictly matching recipes.
      */
     public List<Recipe> getStrictMatches() {
         List<Ingredient> pantry = getAllIngredients();
@@ -182,6 +245,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * Stretch Goal (Section 2.3):
      * Returns recipes missing exactly ONE required ingredient (or lacking quantity for only one).
+     *
+     * @return List of AlmostThereRecipe instances detailing missing ingredients.
      */
     public List<Recipe.AlmostThereRecipe> getAlmostThereMatches() {
         List<Ingredient> pantry = getAllIngredients();

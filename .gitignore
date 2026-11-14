@@ -9,3 +9,5 @@
 .cxx
 local.properties
 .artifacts
+SmartPantryManager/app/build/
+SmartPantryManager/build/

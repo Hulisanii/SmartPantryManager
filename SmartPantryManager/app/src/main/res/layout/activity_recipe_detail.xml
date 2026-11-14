@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorBackground">
+
+    <!-- Top Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/colorPrimaryDark"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tv_recipe_detail_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_recipe_detail"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorTextWhite" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:id="@+id/recipe_detail_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Ingredients Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/header_required_ingredients"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
+                android:paddingTop="8dp"
+                android:paddingBottom="6dp" />
+
+            <LinearLayout
+                android:id="@+id/ll_ingredients_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <!-- Preparation Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/header_preparation_method"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
+                android:paddingTop="16dp"
+                android:paddingBottom="6dp" />
+
+            <TextView
+                android:id="@+id/tv_steps_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="@color/colorTextPrimary"
+                android:padding="8dp" />
+
+            <!-- Strict Verification Badge -->
+            <TextView
+                android:id="@+id/tv_strict_badge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/strict_verification_badge"
+                android:textSize="13sp"
+                android:background="@color/colorSuccessBackground"
+                android:textColor="@color/colorSuccessText"
+                android:padding="12dp"
+                android:layout_marginTop="16dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Back Button -->
+    <Button
+        android:id="@+id/btn_back_to_suggestions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_back_to_suggestions"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextWhite"
+        android:backgroundTint="@color/colorPrimary"
+        android:layout_margin="12dp" />
+
+    <!-- Bottom Navigation Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/colorSurface">
+
+        <Button
+            android:id="@+id/nav_btn_pantry"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/nav_pantry"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextSecondary"
+            android:backgroundTint="@color/colorSurface" />
+
+        <Button
+            android:id="@+id/nav_btn_recipes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/nav_recipes"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:backgroundTint="@color/colorPrimaryLight" />
+
+        <Button
+            android:id="@+id/nav_btn_settings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/nav_settings"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextSecondary"
+            android:backgroundTint="@color/colorSurface" />
+    </LinearLayout>
+
+</LinearLayout>

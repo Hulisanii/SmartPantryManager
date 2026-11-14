@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorBackground">
+
+    <!-- Top Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/colorPrimaryDark"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_settings"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorTextWhite" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Preferences Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/header_preferences"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
+                android:paddingTop="4dp"
+                android:paddingBottom="8dp" />
+
+            <Switch
+                android:id="@+id/switch_expiry_alerts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/switch_expiry_alerts"
+                android:textSize="15sp"
+                android:paddingTop="8dp"
+                android:paddingBottom="12dp" />
+
+            <!-- DB Justification Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/header_db_justification"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
+                android:paddingTop="16dp"
+                android:paddingBottom="6dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/body_db_justification"
+                android:textSize="14sp"
+                android:textColor="@color/colorTextPrimary"
+                android:padding="8dp" />
+
+            <!-- Unit Rules Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/header_unit_rules"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
+                android:paddingTop="16dp"
+                android:paddingBottom="6dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/body_unit_rules"
+                android:textSize="14sp"
+                android:textColor="@color/colorTextPrimary"
+                android:padding="8dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Back Button -->
+    <Button
+        android:id="@+id/btn_back_to_pantry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_back_to_pantry"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextWhite"
+        android:backgroundTint="@color/colorPrimary"
+        android:layout_margin="12dp" />
+
+    <!-- Bottom Navigation Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/colorSurface">
+
+        <Button
+            android:id="@+id/nav_btn_pantry"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/nav_pantry"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextSecondary"
+            android:backgroundTint="@color/colorSurface" />
+
+        <Button
+            android:id="@+id/nav_btn_recipes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/nav_recipes"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextSecondary"
+            android:backgroundTint="@color/colorSurface" />
+
+        <Button
+            android:id="@+id/nav_btn_settings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/nav_settings"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:backgroundTint="@color/colorPrimaryLight" />
+    </LinearLayout>
+
+</LinearLayout>

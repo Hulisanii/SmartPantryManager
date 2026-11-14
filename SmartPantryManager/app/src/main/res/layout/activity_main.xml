@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorBackground">
+
+    <!-- Top Action Bar / Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/colorPrimaryDark"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tv_app_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorTextWhite" />
+
+        <TextView
+            android:id="@+id/tv_app_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_tagline"
+            android:textSize="13sp"
+            android:textColor="@color/colorPrimaryLight"
+            android:paddingTop="2dp" />
+    </LinearLayout>
+
+    <!-- Expiry Alert Banner -->
+    <TextView
+        android:id="@+id/alert_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAlertBackground"
+        android:textColor="@color/colorAlertText"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:padding="12dp"
+        android:visibility="gone" />
+
+    <!-- Action Buttons Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp">
+
+        <Button
+            android:id="@+id/btn_add_ingredient"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/btn_add_ingredient"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextWhite"
+            android:backgroundTint="@color/colorPrimary"
+            android:layout_marginEnd="6dp" />
+
+        <Button
+            android:id="@+id/btn_find_recipes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/btn_find_recipes"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextWhite"
+            android:backgroundTint="@color/colorAccent"
+            android:layout_marginStart="6dp" />
+    </LinearLayout>
+
+    <!-- Empty State View -->
+    <TextView
+        android:id="@+id/empty_state_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_pantry_message"
+        android:textSize="15sp"
+        android:textColor="@color/colorTextSecondary"
+        android:gravity="center"
+        android:padding="32dp"
+        android:visibility="gone" />
+
+    <!-- Main Dynamic Pantry List -->
+    <ListView
+        android:id="@+id/pantry_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@color/colorDivider"
+        android:dividerHeight="1dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp" />
+
+    <!-- Divider Line -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorDivider" />
+
+    <!-- Bottom Navigation Bar -->
+    <LinearLayout
+        android:id="@+id/bottom_nav_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/colorSurface">
+
+        <Button
+            android:id="@+id/nav_btn_pantry"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/nav_pantry"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:backgroundTint="@color/colorPrimaryLight" />
+
+        <Button
+            android:id="@+id/nav_btn_recipes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/nav_recipes"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextSecondary"
+            android:backgroundTint="@color/colorSurface" />
+
+        <Button
+            android:id="@+id/nav_btn_settings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/nav_settings"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextSecondary"
+            android:backgroundTint="@color/colorSurface" />
+    </LinearLayout>
+
+</LinearLayout>

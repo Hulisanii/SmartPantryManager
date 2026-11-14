@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Information -->
+    <string name="app_name">Smart Pantry Manager</string>
+    <string name="app_tagline">Track what you have. Cook strictly with leftover ingredients.</string>
+
+    <!-- Navigation Menu Items -->
+    <string name="nav_pantry">Pantry</string>
+    <string name="nav_recipes">Recipes</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Pantry List Screen -->
+    <string name="title_pantry">Pantry Inventory</string>
+    <string name="subtitle_pantry">Manage your leftover ingredients below to get exact recipe suggestions.</string>
+    <string name="btn_add_ingredient">+ Add Ingredient</string>
+    <string name="btn_find_recipes">Find Recipes I Can Make</string>
+    <string name="empty_pantry_message">Your pantry is currently empty.\nTap "+ Add Ingredient" above to start tracking items!</string>
+    <string name="expiry_alert_banner">⚠️ Alert: %1$d ingredient(s) in your pantry are expiring soon or expired!</string>
+
+    <!-- Ingredient Form Screen -->
+    <string name="title_add_ingredient">Add New Ingredient</string>
+    <string name="title_edit_ingredient">Edit Ingredient</string>
+    <string name="label_ingredient_name">Ingredient Name</string>
+    <string name="hint_ingredient_name">e.g. Tomato, Egg, Oats, Cheese</string>
+    <string name="label_quantity">Quantity</string>
+    <string name="hint_quantity">e.g. 2, 200, 0.5</string>
+    <string name="label_unit">Unit</string>
+    <string name="hint_unit">e.g. piece, g, kg, ml, l, clove, slice, tbsp, pinch, can</string>
+    <string name="label_quick_units">Quick Unit Select:</string>
+    <string name="label_expiry_date">Expiry Date (Optional)</string>
+    <string name="hint_expiry_date">Tap to select date (YYYY-MM-DD)</string>
+    <string name="btn_save_ingredient">Save Ingredient</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="msg_ingredient_saved">Ingredient saved successfully.</string>
+    <string name="err_save_failed">Database Error: Could not save ingredient. Please try again.</string>
+    <string name="err_name_required">Validation Error: Ingredient name is required.</string>
+    <string name="err_quantity_required">Validation Error: Quantity is required.</string>
+    <string name="err_quantity_numeric">Validation Error: Quantity must be a valid numeric value.</string>
+    <string name="err_quantity_positive">Validation Error: Quantity must be greater than zero.</string>
+    <string name="err_unit_required">Validation Error: Unit is required.</string>
+
+    <!-- Dialog Actions -->
+    <string name="action_edit">Edit Ingredient</string>
+    <string name="action_delete">Delete Ingredient</string>
+    <string name="dialog_delete_title">Delete Ingredient?</string>
+    <string name="dialog_delete_message">Are you sure you want to remove %1$s from your pantry?</string>
+    <string name="msg_ingredient_deleted">%1$s deleted from pantry.</string>
+
+    <!-- Suggested Recipes Screen -->
+    <string name="title_suggested_recipes">Suggested Recipes</string>
+    <string name="strict_matching_intro">Strict Matching Rule: Suggestions include ONLY recipes where 100% of required ingredients are present in your pantry in sufficient quantity.</string>
+    <string name="header_strict_matches">Suggested Recipes (Ready to Cook)</string>
+    <string name="header_almost_there">Almost There (Missing 1 Ingredient)</string>
+    <string name="empty_strict_matches">No recipes match your pantry yet — add more ingredients or increase available quantities.</string>
+    <string name="empty_almost_there">No \'Almost There\' recipes found.</string>
+    <string name="badge_ready_to_cook">✓ All ingredients available in pantry</string>
+    <string name="badge_missing_prefix">Missing: %1$s</string>
+    <string name="btn_refresh_suggestions">Refresh Suggestions</string>
+
+    <!-- Recipe Detail Screen -->
+    <string name="title_recipe_detail">Recipe Detail</string>
+    <string name="header_required_ingredients">Required Ingredients</string>
+    <string name="header_preparation_method">Preparation Method</string>
+    <string name="strict_verification_badge">Strict Match Verification: This recipe is recommended because 100% of the listed ingredients were verified in your pantry in required amounts.</string>
+    <string name="btn_back_to_suggestions">Back to Suggestions</string>
+    <string name="err_recipe_not_found">This recipe is no longer available in the database.</string>
+
+    <!-- Settings Screen -->
+    <string name="title_settings">Settings &amp; Preferences</string>
+    <string name="header_preferences">Preferences</string>
+    <string name="switch_expiry_alerts">Show expiring-soon reminder on pantry screen</string>
+    <string name="header_db_justification">Data Storage Justification</string>
+    <string name="body_db_justification">Storage Method: Local SQLite Database via SQLiteOpenHelper.\n\nJustification: SQLite is ideal for Smart Pantry Manager because it guarantees full offline functionality, fast CRUD operations, and persistent data storage across app restarts without requiring cloud connectivity or server infrastructure.</string>
+    <string name="header_unit_rules">Unit Matching &amp; Rules</string>
+    <string name="body_unit_rules">Automatic unit conversions are supported between metric mass (g &lt;-&gt; kg) and metric volume (ml &lt;-&gt; l). Count-based units (piece, clove, slice, tbsp, pinch, can) are matched directly with plural/singular normalization.</string>
+    <string name="btn_back_to_pantry">Back to Pantry</string>
+
+    <!-- Unit Strings -->
+    <string name="unit_piece">piece</string>
+    <string name="unit_g">g</string>
+    <string name="unit_kg">kg</string>
+    <string name="unit_ml">ml</string>
+    <string name="unit_l">l</string>
+    <string name="unit_clove">clove</string>
+    <string name="unit_slice">slice</string>
+    <string name="unit_tbsp">tbsp</string>
+    <string name="unit_pinch">pinch</string>
+    <string name="unit_can">can</string>
+</resources>

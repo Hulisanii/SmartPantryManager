@@ -3,6 +3,9 @@ package com.example.smartpantry;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data Model class representing a Recipe, including its required ingredients and preparation steps.
+ */
 public class Recipe {
     public long id;
     public String name;
@@ -10,6 +13,14 @@ public class Recipe {
     public String steps;
     public List<Requirement> ingredients = new ArrayList<>();
 
+    /**
+     * Constructs a new Recipe instance from database fields.
+     *
+     * @param id Database primary key ID.
+     * @param name Unique recipe name.
+     * @param ingredientsText Formatted string of required ingredients (name|quantity|unit;).
+     * @param steps Step-by-step preparation instructions.
+     */
     public Recipe(long id, String name, String ingredientsText, String steps) {
         this.id = id;
         this.name = name == null ? "" : name.trim();
@@ -34,6 +45,9 @@ public class Recipe {
         return name;
     }
 
+    /**
+     * Data class representing an individual ingredient requirement for a recipe.
+     */
     public static class Requirement {
         public String name;
         public double quantity;
@@ -58,6 +72,9 @@ public class Recipe {
         }
     }
 
+    /**
+     * Data wrapper class representing an "Almost There" recipe missing 1 ingredient.
+     */
     public static class AlmostThereRecipe {
         public Recipe recipe;
         public String missingInfo;

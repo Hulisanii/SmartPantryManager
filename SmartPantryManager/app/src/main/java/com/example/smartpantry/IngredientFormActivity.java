@@ -2,9 +2,8 @@ package com.example.smartpantry;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -14,84 +13,61 @@ import android.widget.Toast;
 import java.util.Calendar;
 import java.util.Locale;
 
+/**
+ * Activity for Adding or Editing an Ingredient in the Pantry SQLite database.
+ */
 public class IngredientFormActivity extends Activity {
     private DatabaseHelper db;
-    private EditText nameField, quantityField, unitField, expiryField;
+    private EditText etName, etQuantity, etUnit, etExpiry;
+    private TextView tvTitle;
     private long ingredientId = -1;
 
     @Override
-    protected void onCreate(Bundle state) {
-        super.onCreate(state);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_ingredient_form);
+
         db = new DatabaseHelper(this);
         ingredientId = getIntent().getLongExtra("ingredient_id", -1);
 
-        LinearLayout root = Ui.page(this, ingredientId == -1 ? "Add Ingredient" : "Edit Ingredient");
+        tvTitle = findViewById(R.id.tv_form_title);
+        etName = findViewById(R.id.et_name);
+        etQuantity = findViewById(R.id.et_quantity);
+        etUnit = findViewById(R.id.et_unit);
+        etExpiry = findViewById(R.id.et_expiry);
 
-        root.addView(label("Ingredient Name:"));
-        nameField = field("e.g. Tomato, Egg, Oats, Cheese", InputType.TYPE_CLASS_TEXT, root);
+        Button btnSave = findViewById(R.id.btn_save);
+        Button btnCancel = findViewById(R.id.btn_cancel);
 
-        root.addView(label("Quantity:"));
-        quantityField = field("e.g. 2, 200, 0.5", InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL, root);
+        if (ingredientId != -1) {
+            tvTitle.setText(R.string.title_edit_ingredient);
+            Ingredient item = db.getIngredient(ingredientId);
+            if (item != null) {
+                etName.setText(item.name);
+                etQuantity.setText(item.getFormattedQuantity());
+                etUnit.setText(item.unit);
+                etExpiry.setText(item.expiryDate);
+            }
+        } else {
+            tvTitle.setText(R.string.title_add_ingredient);
+        }
 
-        root.addView(label("Unit:"));
-        unitField = field("e.g. piece, g, kg, ml, l, clove, slice, tbsp, pinch, can", InputType.TYPE_CLASS_TEXT, root);
-
-        // Quick unit chips row
-        LinearLayout unitChips = new LinearLayout(this);
-        unitChips.setOrientation(LinearLayout.HORIZONTAL);
-        unitChips.setPadding(0, 0, 0, 8);
+        // Setup quick units buttons
+        LinearLayout quickUnitsContainer = findViewById(R.id.ll_quick_units_container);
         String[] commonUnits = {"piece", "g", "kg", "ml", "l", "clove", "slice", "tbsp", "pinch", "can"};
         for (String u : commonUnits) {
             Button chip = new Button(this);
             chip.setText(u);
             chip.setTextSize(11);
-            chip.setPadding(4, 2, 4, 2);
-            chip.setOnClickListener(v -> unitField.setText(u));
-            unitChips.addView(chip, new LinearLayout.LayoutParams(0, -2, 1));
-        }
-        root.addView(unitChips);
-
-        root.addView(label("Expiry Date (Optional):"));
-        expiryField = field("Tap to select date (YYYY-MM-DD)", InputType.TYPE_NULL, root);
-        expiryField.setFocusable(false);
-        expiryField.setOnClickListener(v -> showDatePicker());
-
-        if (ingredientId != -1) {
-            Ingredient item = db.getIngredient(ingredientId);
-            if (item != null) {
-                nameField.setText(item.name);
-                quantityField.setText(item.getFormattedQuantity());
-                unitField.setText(item.unit);
-                expiryField.setText(item.expiryDate);
-            }
+            chip.setOnClickListener(v -> etUnit.setText(u));
+            quickUnitsContainer.addView(chip);
         }
 
-        root.addView(Ui.button(this, "Save Ingredient", v -> save()));
-        root.addView(Ui.button(this, "Cancel", v -> finish()));
+        etExpiry.setOnClickListener(v -> showDatePicker());
+        btnSave.setOnClickListener(v -> save());
+        btnCancel.setOnClickListener(v -> finish());
 
-        Ui.nav(this, root);
-        setContentView(root);
-    }
-
-    private TextView label(String text) {
-        TextView tv = new TextView(this);
-        tv.setText(text);
-        tv.setTextSize(14);
-        tv.setTextColor(Color.rgb(60, 70, 60));
-        tv.setPadding(0, 8, 0, 2);
-        return tv;
-    }
-
-    private EditText field(String hint, int inputType, LinearLayout root) {
-        EditText e = new EditText(this);
-        e.setSingleLine(true);
-        e.setHint(hint);
-        e.setInputType(inputType);
-        e.setPadding(16, 12, 16, 12);
-        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(-1, -2);
-        p.setMargins(0, 2, 0, 8);
-        root.addView(e, p);
-        return e;
+        setupNavigation();
     }
 
     private void showDatePicker() {
@@ -103,26 +79,26 @@ public class IngredientFormActivity extends Activity {
         DatePickerDialog dpd = new DatePickerDialog(this,
                 (view, year1, monthOfYear, dayOfMonth) -> {
                     String formatted = String.format(Locale.ROOT, "%04d-%02d-%02d", year1, monthOfYear + 1, dayOfMonth);
-                    expiryField.setText(formatted);
+                    etExpiry.setText(formatted);
                 }, year, month, day);
         dpd.show();
     }
 
     private void save() {
-        String n = nameField.getText().toString().trim();
-        String q = quantityField.getText().toString().trim();
-        String u = unitField.getText().toString().trim();
-        String exp = expiryField.getText().toString().trim();
+        String n = etName.getText().toString().trim();
+        String q = etQuantity.getText().toString().trim();
+        String u = etUnit.getText().toString().trim();
+        String exp = etExpiry.getText().toString().trim();
 
         if (n.isEmpty()) {
-            Toast.makeText(this, "Validation Error: Ingredient name is required.", Toast.LENGTH_LONG).show();
-            nameField.requestFocus();
+            Toast.makeText(this, R.string.err_name_required, Toast.LENGTH_LONG).show();
+            etName.requestFocus();
             return;
         }
 
         if (q.isEmpty()) {
-            Toast.makeText(this, "Validation Error: Quantity is required.", Toast.LENGTH_LONG).show();
-            quantityField.requestFocus();
+            Toast.makeText(this, R.string.err_quantity_required, Toast.LENGTH_LONG).show();
+            etQuantity.requestFocus();
             return;
         }
 
@@ -130,20 +106,20 @@ public class IngredientFormActivity extends Activity {
         try {
             amount = Double.parseDouble(q);
         } catch (NumberFormatException ex) {
-            Toast.makeText(this, "Validation Error: Quantity must be a valid numeric value.", Toast.LENGTH_LONG).show();
-            quantityField.requestFocus();
+            Toast.makeText(this, R.string.err_quantity_numeric, Toast.LENGTH_LONG).show();
+            etQuantity.requestFocus();
             return;
         }
 
         if (!Double.isFinite(amount) || amount <= 0) {
-            Toast.makeText(this, "Validation Error: Quantity must be greater than zero.", Toast.LENGTH_LONG).show();
-            quantityField.requestFocus();
+            Toast.makeText(this, R.string.err_quantity_positive, Toast.LENGTH_LONG).show();
+            etQuantity.requestFocus();
             return;
         }
 
         if (u.isEmpty()) {
-            Toast.makeText(this, "Validation Error: Unit is required.", Toast.LENGTH_LONG).show();
-            unitField.requestFocus();
+            Toast.makeText(this, R.string.err_unit_required, Toast.LENGTH_LONG).show();
+            etUnit.requestFocus();
             return;
         }
 
@@ -155,10 +131,32 @@ public class IngredientFormActivity extends Activity {
         }
 
         if (result >= 0) {
-            Toast.makeText(this, "Ingredient saved successfully.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.msg_ingredient_saved, Toast.LENGTH_SHORT).show();
             finish();
         } else {
-            Toast.makeText(this, "Database Error: Could not save ingredient. Please try again.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.err_save_failed, Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void setupNavigation() {
+        Button navPantry = findViewById(R.id.nav_btn_pantry);
+        Button navRecipes = findViewById(R.id.nav_btn_recipes);
+        Button navSettings = findViewById(R.id.nav_btn_settings);
+
+        if (navPantry != null) navPantry.setOnClickListener(v -> {
+            Intent i = new Intent(this, MainActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(i);
+        });
+        if (navRecipes != null) navRecipes.setOnClickListener(v -> {
+            Intent i = new Intent(this, SuggestedRecipesActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(i);
+        });
+        if (navSettings != null) navSettings.setOnClickListener(v -> {
+            Intent i = new Intent(this, SettingsActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(i);
+        });
     }
 }

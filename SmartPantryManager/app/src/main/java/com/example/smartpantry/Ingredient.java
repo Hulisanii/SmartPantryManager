@@ -5,6 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * Data Model class representing a single Pantry Ingredient.
+ */
 public class Ingredient {
     public long id;
     public String name;
@@ -12,6 +15,15 @@ public class Ingredient {
     public String unit;
     public String expiryDate;
 
+    /**
+     * Constructs a new Ingredient instance.
+     *
+     * @param id Database primary key ID.
+     * @param name Ingredient name.
+     * @param quantity Quantity amount.
+     * @param unit Unit of measurement.
+     * @param expiryDate Expiry date string (YYYY-MM-DD).
+     */
     public Ingredient(long id, String name, double quantity, String unit, String expiryDate) {
         this.id = id;
         this.name = name == null ? "" : name.trim();
@@ -20,6 +32,11 @@ public class Ingredient {
         this.expiryDate = expiryDate == null ? "" : expiryDate.trim();
     }
 
+    /**
+     * Formats quantity without trailing decimal zeroes for whole numbers.
+     *
+     * @return Formatted quantity string.
+     */
     public String getFormattedQuantity() {
         if (quantity == Math.floor(quantity)) {
             return String.valueOf((long) quantity);
@@ -29,6 +46,8 @@ public class Ingredient {
 
     /**
      * Checks if the ingredient expiry date is within 3 days or already passed.
+     *
+     * @return True if expiring soon or expired, false otherwise.
      */
     public boolean isExpiringSoonOrExpired() {
         if (expiryDate == null || expiryDate.trim().isEmpty()) {
@@ -40,7 +59,6 @@ public class Ingredient {
             Date exp = sdf.parse(expiryDate.trim());
             if (exp == null) return false;
             long nowMillis = System.currentTimeMillis();
-            // Expired or expires within 3 days (259,200,000 ms)
             return exp.getTime() <= (nowMillis + 3L * 24 * 60 * 60 * 1000);
         } catch (ParseException e) {
             return false;

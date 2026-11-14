@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorBackground">
+
+    <!-- Top Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/colorPrimaryDark"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_suggested_recipes"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorTextWhite" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/recipes_content_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/strict_matching_intro"
+                android:textSize="13sp"
+                android:textColor="@color/colorTextSecondary"
+                android:paddingBottom="12dp" />
+
+            <!-- Section 1: Strict Matches -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/header_strict_matches"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp" />
+
+            <LinearLayout
+                android:id="@+id/ll_strict_matches_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <!-- Section 2: Almost There Matches -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/header_almost_there"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWarningText"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp" />
+
+            <LinearLayout
+                android:id="@+id/ll_almost_there_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Refresh Button -->
+    <Button
+        android:id="@+id/btn_refresh_suggestions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_refresh_suggestions"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextWhite"
+        android:backgroundTint="@color/colorPrimary"
+        android:layout_margin="12dp" />
+
+    <!-- Bottom Navigation Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/colorSurface">
+
+        <Button
+            android:id="@+id/nav_btn_pantry"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/nav_pantry"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextSecondary"
+            android:backgroundTint="@color/colorSurface" />
+
+        <Button
+            android:id="@+id/nav_btn_recipes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/nav_recipes"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:backgroundTint="@color/colorPrimaryLight" />
+
+        <Button
+            android:id="@+id/nav_btn_settings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/nav_settings"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextSecondary"
+            android:backgroundTint="@color/colorSurface" />
+    </LinearLayout>
+
+</LinearLayout>

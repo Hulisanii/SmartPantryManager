@@ -3,40 +3,38 @@ package com.example.smartpantry;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.List;
 
+/**
+ * Activity for displaying Suggested Recipes that strictly match available pantry stock,
+ * as well as "Almost There" recipes missing only 1 ingredient.
+ */
 public class SuggestedRecipesActivity extends Activity {
     private DatabaseHelper db;
-    private LinearLayout contentContainer;
+    private LinearLayout llStrictList;
+    private LinearLayout llAlmostList;
 
     @Override
-    protected void onCreate(Bundle state) {
-        super.onCreate(state);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_suggested_recipes);
+
         db = new DatabaseHelper(this);
 
-        LinearLayout page = Ui.page(this, "Suggested Recipes");
+        llStrictList = findViewById(R.id.ll_strict_matches_list);
+        llAlmostList = findViewById(R.id.ll_almost_there_list);
 
-        ScrollView scroll = new ScrollView(this);
-        contentContainer = new LinearLayout(this);
-        contentContainer.setOrientation(LinearLayout.VERTICAL);
-        scroll.addView(contentContainer);
+        Button btnRefresh = findViewById(R.id.btn_refresh_suggestions);
+        btnRefresh.setOnClickListener(v -> refresh());
 
-        page.addView(scroll, new LinearLayout.LayoutParams(-1, 0, 1));
-
-        page.addView(Ui.button(this, "Refresh Suggestions", v -> refresh()));
-
-        Ui.nav(this, page);
-        setContentView(page);
+        setupNavigation();
     }
 
     @Override
@@ -46,93 +44,82 @@ public class SuggestedRecipesActivity extends Activity {
     }
 
     private void refresh() {
-        contentContainer.removeAllViews();
+        llStrictList.removeAllViews();
+        llAlmostList.removeAllViews();
 
-        TextView intro = Ui.text(this, "Strict Matching Rule: Suggestions include ONLY recipes where 100% of required ingredients are present in your pantry in sufficient quantity.", 14);
-        contentContainer.addView(intro);
-
-        // --- SECTION 1: STRICT MATCHES ---
-        TextView strictHeader = new TextView(this);
-        strictHeader.setText("Suggested Recipes (Ready to Cook)");
-        strictHeader.setTextSize(18);
-        strictHeader.setTypeface(null, Typeface.BOLD);
-        strictHeader.setTextColor(Ui.DARK);
-        strictHeader.setPadding(0, 12, 0, 8);
-        contentContainer.addView(strictHeader);
-
+        // 1. Fetch Strict Matches
         List<Recipe> strictMatches = db.getStrictMatches();
-
         if (strictMatches.isEmpty()) {
-            TextView emptyText = Ui.text(this, "No recipes match your pantry yet — add more ingredients or increase quantities to see suggestions.", 15);
-            emptyText.setTextColor(Color.rgb(180, 80, 0));
-            emptyText.setPadding(12, 12, 12, 12);
-            emptyText.setBackgroundColor(Color.rgb(255, 243, 224));
-            contentContainer.addView(emptyText);
+            TextView emptyView = new TextView(this);
+            emptyView.setText(R.string.empty_strict_matches);
+            emptyView.setTextSize(14);
+            emptyView.setTextColor(Color.parseColor("#E65100"));
+            emptyView.setBackgroundColor(Color.parseColor("#FFF3E0"));
+            emptyView.setPadding(16, 16, 16, 16);
+            llStrictList.addView(emptyView);
         } else {
             for (Recipe recipe : strictMatches) {
-                LinearLayout card = createRecipeCard(recipe.name, "✓ All ingredients available in pantry", Ui.GREEN, v -> {
+                View card = LayoutInflater.from(this).inflate(R.layout.item_recipe, llStrictList, false);
+                TextView tvTitle = card.findViewById(R.id.tv_recipe_title);
+                TextView tvSub = card.findViewById(R.id.tv_recipe_subtitle);
+
+                tvTitle.setText(recipe.name);
+                tvSub.setText(R.string.badge_ready_to_cook);
+                tvSub.setTextColor(Color.parseColor("#2E7D32"));
+
+                card.setOnClickListener(v -> {
                     Intent intent = new Intent(this, RecipeDetailActivity.class);
                     intent.putExtra("recipe_id", recipe.id);
                     startActivity(intent);
                 });
-                contentContainer.addView(card);
+                llStrictList.addView(card);
             }
         }
 
-        // --- SECTION 2: ALMOST THERE (MISSING 1 INGREDIENT) ---
-        TextView almostHeader = new TextView(this);
-        almostHeader.setText("\nAlmost There (Missing 1 Ingredient)");
-        almostHeader.setTextSize(18);
-        almostHeader.setTypeface(null, Typeface.BOLD);
-        almostHeader.setTextColor(Color.rgb(180, 100, 0));
-        almostHeader.setPadding(0, 16, 0, 8);
-        contentContainer.addView(almostHeader);
-
+        // 2. Fetch Almost There Matches
         List<Recipe.AlmostThereRecipe> almostMatches = db.getAlmostThereMatches();
-
         if (almostMatches.isEmpty()) {
-            TextView emptyAlmost = Ui.text(this, "No 'Almost There' recipes found.", 14);
+            TextView emptyAlmost = new TextView(this);
+            emptyAlmost.setText(R.string.empty_almost_there);
+            emptyAlmost.setTextSize(14);
             emptyAlmost.setTextColor(Color.GRAY);
-            contentContainer.addView(emptyAlmost);
+            emptyAlmost.setPadding(8, 8, 8, 8);
+            llAlmostList.addView(emptyAlmost);
         } else {
             for (Recipe.AlmostThereRecipe item : almostMatches) {
-                LinearLayout card = createRecipeCard(item.recipe.name, "Missing: " + item.missingInfo, Color.rgb(216, 67, 21), v -> {
+                View card = LayoutInflater.from(this).inflate(R.layout.item_recipe, llAlmostList, false);
+                TextView tvTitle = card.findViewById(R.id.tv_recipe_title);
+                TextView tvSub = card.findViewById(R.id.tv_recipe_subtitle);
+
+                tvTitle.setText(item.recipe.name);
+                tvSub.setText(getString(R.string.badge_missing_prefix, item.missingInfo));
+                tvSub.setTextColor(Color.parseColor("#D84315"));
+
+                card.setOnClickListener(v -> {
                     Intent intent = new Intent(this, RecipeDetailActivity.class);
                     intent.putExtra("recipe_id", item.recipe.id);
                     startActivity(intent);
                 });
-                contentContainer.addView(card);
+                llAlmostList.addView(card);
             }
         }
     }
 
-    private LinearLayout createRecipeCard(String title, String subtitle, int accentColor, View.OnClickListener listener) {
-        LinearLayout card = new LinearLayout(this);
-        card.setOrientation(LinearLayout.VERTICAL);
-        card.setPadding(18, 14, 18, 14);
-        card.setBackgroundColor(Color.WHITE);
-        card.setClickable(true);
-        card.setFocusable(true);
-        card.setOnClickListener(listener);
+    private void setupNavigation() {
+        Button navPantry = findViewById(R.id.nav_btn_pantry);
+        Button navRecipes = findViewById(R.id.nav_btn_recipes);
+        Button navSettings = findViewById(R.id.nav_btn_settings);
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-1, -2);
-        params.setMargins(0, 4, 0, 8);
-        card.setLayoutParams(params);
-
-        TextView titleView = new TextView(this);
-        titleView.setText(title);
-        titleView.setTextSize(16);
-        titleView.setTypeface(null, Typeface.BOLD);
-        titleView.setTextColor(Color.rgb(30, 40, 30));
-
-        TextView subView = new TextView(this);
-        subView.setText(subtitle);
-        subView.setTextSize(13);
-        subView.setTextColor(accentColor);
-
-        card.addView(titleView);
-        card.addView(subView);
-
-        return card;
+        if (navPantry != null) navPantry.setOnClickListener(v -> {
+            Intent i = new Intent(this, MainActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(i);
+        });
+        if (navRecipes != null) navRecipes.setOnClickListener(v -> {});
+        if (navSettings != null) navSettings.setOnClickListener(v -> {
+            Intent i = new Intent(this, SettingsActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(i);
+        });
     }
 }
